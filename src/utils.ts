@@ -3,6 +3,15 @@ import path from 'path';
 import glob from 'glob';
 import fs from 'fs-extra';
 
+const DEFAULT_CONFIG = {
+  mergeSettings: {
+    outputDir: 'compiled-contacts',
+    inputGlob: '!(node_modules)/**/*.sol',
+    delimeter: '\n\n',
+    compiledSuffix: '_merged',
+  },
+};
+
 export interface SolMergerSettings {
   root: string;
   outputDir: string;
@@ -24,16 +33,21 @@ export function getSettings(workspace: vscode.WorkspaceFolder): SolMergerSetting
     jsonConfig = {};
   }
 
-  let outputDir = jsonConfig.outputDir || config.get('outputDir', 'compiled-contacts');
+  let outputDir =
+    jsonConfig.outputDir || config.get('outputDir', DEFAULT_CONFIG.mergeSettings.outputDir);
   if (!path.isAbsolute(outputDir)) {
     outputDir = path.join(workspace.uri.path, outputDir);
   }
   return {
     root: path.resolve(workspace.uri.path),
     outputDir,
-    inputGlob: jsonConfig.inputGlob || config.get('inputGlob', '!(node_modules)/**/*.sol'),
-    delimeter: jsonConfig.delimeter || config.get('delimeter', '\n\n'),
-    append: jsonConfig.compiledSuffix || config.get('compiledSuffix', '_merged'),
+    inputGlob:
+      jsonConfig.inputGlob || config.get('inputGlob', DEFAULT_CONFIG.mergeSettings.inputGlob),
+    delimeter:
+      jsonConfig.delimeter || config.get('delimeter', DEFAULT_CONFIG.mergeSettings.delimeter),
+    append:
+      jsonConfig.compiledSuffix ||
+      config.get('compiledSuffix', DEFAULT_CONFIG.mergeSettings.compiledSuffix),
   };
 }
 
@@ -53,4 +67,14 @@ export async function getFileList(settings: SolMergerSettings): Promise<string[]
       },
     );
   });
+}
+
+export function maybeSetInitialConfig() {
+  const config = vscode.workspace.getConfiguration();
+
+  if (config.has('solMerger')) {
+    return;
+  }
+
+  config.update('solMerger', DEFAULT_CONFIG);
 }
