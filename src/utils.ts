@@ -38,7 +38,7 @@ export function getSettings(workspace: vscode.WorkspaceFolder): SolMergerSetting
 }
 
 export async function getFileList(settings: SolMergerSettings): Promise<string[]> {
-  return new Promise((resolve, reject) => {
+  return new Promise<string[]>((resolve, reject) => {
     glob(
       settings.inputGlob,
       {
