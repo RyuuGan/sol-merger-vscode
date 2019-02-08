@@ -1,1 +1,1 @@
-# sol-merger-vscode
+# Sol merger VSCode extension

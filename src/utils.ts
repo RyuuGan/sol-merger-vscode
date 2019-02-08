@@ -1,7 +1,7 @@
 import vscode from 'vscode';
 import path from 'path';
 import glob from 'glob';
-import fs from 'fs';
+import fs from 'fs-extra';
 
 export interface SolMergerSettings {
   root: string;
@@ -16,10 +16,9 @@ export function getSettings(workspace: vscode.WorkspaceFolder): SolMergerSetting
   let jsonConfig: any;
   const overrideConfigFile = path.join(path.resolve(workspace.uri.path), '.solMerger.json');
   try {
-    const content = fs.readFileSync(overrideConfigFile, {
+    jsonConfig = fs.readJSONSync(overrideConfigFile, {
       encoding: 'utf-8',
     });
-    jsonConfig = JSON.parse(content);
   } catch (e) {
     console.log(`File is not ${overrideConfigFile} is not a valid config file`);
     jsonConfig = {};

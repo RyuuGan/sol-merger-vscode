@@ -1,11 +1,16 @@
 import vscode from 'vscode';
 import path from 'path';
 import Merger from 'sol-merger/lib/Merger';
-import fs from 'fs';
+import fs from 'fs-extra';
 import { getSettings, getFileList } from '../utils';
 
 export async function mergeContracts(): Promise<void> {
-  const promises = vscode.workspace.workspaceFolders.map(processWorkspace);
+  const promises =
+    vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.map(processWorkspace);
+
+  if (!promises) {
+    return;
+  }
   await Promise.all(promises);
 }
 
@@ -33,7 +38,7 @@ async function processWorkspace(workspace: vscode.WorkspaceFolder) {
         );
       }
       console.log(`${file} -> ${outputFile}`);
-      fs.writeFile(outputFile, result, { encoding: 'utf-8' }, err => {
+      fs.outputFile(outputFile, result, { encoding: 'utf-8' }, err => {
         if (err) {
           return reject(err);
         }
