@@ -3,7 +3,12 @@
   "displayName": "Solidity Contracts Merger",
   "description": "Merge solidity contracts with one command",
   "version": "0.1.0",
-  "publisher": "Valery Aligorsky <stdammit@gmail.com>",
+  "publisher": "RyuuGan",
+  "author": {
+    "email": "stdammit@gmail.com",
+    "name": "Valery Aligorsky",
+    "url": "https://github.com/RyuuGan"
+  },
   "repository": "https://github.com/RyuuGan/sol-merger-vscode",
   "engines": {
     "vscode": "^1.31.0"
