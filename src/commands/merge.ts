@@ -2,11 +2,13 @@ import vscode from 'vscode';
 import path from 'path';
 import Merger from 'sol-merger/lib/Merger';
 import fs from 'fs-extra';
-import { getSettings, getFileList } from '../utils';
+import { getSettings, getFileList, maybeSetInitialConfig } from '../utils';
 
 export async function mergeContracts(): Promise<void> {
+  maybeSetInitialConfig();
   const promises =
-    vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.map(processWorkspace);
+    vscode.workspace.workspaceFolders &&
+    vscode.workspace.workspaceFolders.map(processWorkspace);
 
   if (!promises) {
     return;
@@ -34,7 +36,7 @@ async function processWorkspace(workspace: vscode.WorkspaceFolder) {
         let extname = path.extname(file);
         outputFile = path.join(
           path.dirname(file),
-          path.basename(file, extname) + settings.append + extname,
+          path.basename(file, extname) + settings.append + extname
         );
       }
       console.log(`${file} -> ${outputFile}`);
