@@ -21,6 +21,43 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": [
+      {
+        "title": "Sol-merger",
+        "properties": {
+          "solMerger.mergeSettings.outputDir": {
+            "type": "string",
+            "default": "compiled-contracts",
+            "description": "Root of the folder for the compiled contracts",
+            "scope": "window"
+          },
+          "solMerger.mergeSettings.inputGlob": {
+            "type": "string",
+            "default": "!(node_modules)/**/*.sol",
+            "description": "Glob for finding solidity contracts",
+            "scope": "window"
+          },
+          "solMerger.mergeSettings.delimeter": {
+            "type": "string",
+            "default": "\\n\\n",
+            "description": "Delimeter for merged contracts. By default splitted by one empy line",
+            "scope": "window"
+          },
+          "solMerger.mergeSettings.compiledSuffix": {
+            "type": "string",
+            "default": "_merged",
+            "description": "Suffix that added to the name of the merged files",
+            "scope": "window"
+          },
+          "solMerger.mergeSettings.cleanDist": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true the dist directory will be removed before start",
+            "scope": "window"
+          }
+        }
+      }
+    ],
     "commands": [
       {
         "command": "extension.sol-merger.merge",

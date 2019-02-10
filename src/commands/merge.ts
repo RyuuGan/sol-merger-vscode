@@ -2,10 +2,13 @@ import vscode from 'vscode';
 import path from 'path';
 import Merger from 'sol-merger/lib/Merger';
 import fs from 'fs-extra';
-import { getSettings, getFileList, maybeSetInitialConfig } from '../utils';
+import { getSettings, getFileList } from '../utils';
+
+const ERROR_MESSAGES = {
+  GO_TO_FILE: 'Go to file',
+}
 
 export async function mergeContracts(): Promise<void> {
-  maybeSetInitialConfig();
   const promises =
     vscode.workspace.workspaceFolders &&
     vscode.workspace.workspaceFolders.map(processWorkspace);
@@ -19,6 +22,10 @@ export async function mergeContracts(): Promise<void> {
 async function processWorkspace(workspace: vscode.WorkspaceFolder) {
   const settings = getSettings(workspace);
   const files = await getFileList(settings);
+
+  if (settings.cleanDist === true) {
+    await fs.remove(settings.outputDir);
+  }
 
   const promises = files.map(file => {
     return new Promise(async (resolve, reject) => {
@@ -36,7 +43,7 @@ async function processWorkspace(workspace: vscode.WorkspaceFolder) {
         let extname = path.extname(file);
         outputFile = path.join(
           path.dirname(file),
-          path.basename(file, extname) + settings.append + extname
+          path.basename(file, extname) + settings.append + extname,
         );
       }
       console.log(`${file} -> ${outputFile}`);
@@ -45,6 +52,15 @@ async function processWorkspace(workspace: vscode.WorkspaceFolder) {
           return reject(err);
         }
         resolve();
+      });
+    }).catch((e: Error) => {
+      console.error(file, e);
+      vscode.window.showErrorMessage(e.message, ERROR_MESSAGES.GO_TO_FILE).then((message) => {
+        if (message === ERROR_MESSAGES.GO_TO_FILE) {
+          vscode.workspace.openTextDocument(file).then(doc => {
+            vscode.window.showTextDocument(doc);
+         });
+        }
       });
     });
   });

@@ -9,6 +9,7 @@ const DEFAULT_CONFIG = {
     inputGlob: '!(node_modules)/**/*.sol',
     delimeter: '\n\n',
     compiledSuffix: '_merged',
+    cleanDist: false
   },
 };
 
@@ -20,6 +21,7 @@ export interface SolMergerSettings {
   inputGlob: string;
   delimeter: string;
   append: string;
+  cleanDist: boolean;
 }
 
 export function getSettings(
@@ -58,6 +60,8 @@ export function getSettings(
     append:
       jsonConfig.compiledSuffix ||
       config.get('compiledSuffix', DEFAULT_CONFIG.mergeSettings.compiledSuffix),
+    cleanDist: jsonConfig.cleanDist ||
+      config.get('cleanDist', DEFAULT_CONFIG.mergeSettings.cleanDist)
   };
 }
 
@@ -81,7 +85,7 @@ export async function getFileList(
   });
 }
 
-export function maybeSetInitialConfig() {
+export async function maybeSetInitialConfig() {
   const config = vscode.workspace.getConfiguration(ROOT_CONFIG_KEY);
 
   const flattenConfig = flattenObject(DEFAULT_CONFIG);
@@ -90,13 +94,13 @@ export function maybeSetInitialConfig() {
     if (config.has(key)) {
       continue;
     }
-    config.update(key, flattenConfig[key]);
+    await config.update(key, flattenConfig[key], true);
   }
 
   const globalConfig = vscode.workspace.getConfiguration();
 
   if (!config.has(ROOT_CONFIG_KEY)) {
-    globalConfig.update(ROOT_CONFIG_KEY, config);
+    await globalConfig.update(ROOT_CONFIG_KEY, config, true);
   }
 
   /*
