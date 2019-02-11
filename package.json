@@ -21,6 +21,12 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "jsonValidation": [
+      {
+        "fileMatch": ".solMerger.json",
+        "url": "./schema.json"
+      }
+    ],
     "configuration": [
       {
         "title": "Sol-merger",

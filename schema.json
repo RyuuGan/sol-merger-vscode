@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "outputDir": {
+      "type": "string",
+      "default": "compiled-contracts",
+      "description": "Root of the folder for the compiled contracts"
+    },
+    "inputGlob": {
+      "type": "string",
+      "default": "!(node_modules)/**/*.sol",
+      "description": "Glob for finding solidity contracts"
+    },
+    "delimeter": {
+      "type": "string",
+      "default": "\n\n",
+      "description": "Delimeter for merged contracts. By default splitted by one empy line"
+    },
+    "compiledSuffix": {
+      "type": "string",
+      "default": "_merged",
+      "description": "Suffix that added to the name of the merged files"
+    },
+    "cleanDist": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true the dist directory will be removed before start"
+    }
+  }
+}
