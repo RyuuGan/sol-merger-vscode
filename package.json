@@ -17,7 +17,8 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "onCommand:extension.sol-merger.merge"
+    "onCommand:extension.sol-merger.merge",
+    "onCommand:extension.sol-merger.compileFile"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -67,9 +68,24 @@
     "commands": [
       {
         "command": "extension.sol-merger.merge",
-        "title": "Sol-merger: merge contracts"
+        "title": "Sol-merger: merge contracts",
+        "category": "Sol-merger"
+      },
+      {
+        "command": "extension.sol-merger.compileFile",
+        "title": "Sol-merger: compile file",
+        "category": "Sol-merger"
       }
-    ]
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "when": "resourceExtname == .sol",
+          "command": "extension.sol-merger.compileFile",
+          "group": "0"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
