@@ -2,7 +2,7 @@
   "name": "sol-merger-vscode",
   "displayName": "Solidity Contracts Merger",
   "description": "Merge solidity contracts with one command",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "RyuuGan",
   "author": {
     "email": "stdammit@gmail.com",
